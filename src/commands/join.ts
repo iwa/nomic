@@ -39,12 +39,12 @@ async function JoinVC(interaction: CommandInteraction) {
                 connection.subscribe(player);
 
                 interaction.reply({
-                    embeds: [Bot.createEmbed(null, "Joined the voice channel!")],
+                    embeds: [Bot.createEmbed(null, ":wave: Joined the voice channel!")],
                     ephemeral: true
                 });
             } catch (e) {
                 interaction.reply({
-                    embeds: [Bot.createEmbed(null, "Failed to join the voice channel!")],
+                    embeds: [Bot.createEmbed(null, ":x: Failed to join the voice channel!")],
                     ephemeral: true
                 });
             }
