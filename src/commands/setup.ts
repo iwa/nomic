@@ -5,7 +5,7 @@ import Command from '../structures/Command';
 export default new class SetupCommand extends Command {
 
     public constructor() {
-        super('setup', SetupVC, 0, [], ['EMBED_LINKS'], 'setup', "Setup the bot in this VC");
+        super('setup', SetupVC, 1, [], ['EMBED_LINKS'], 'setup', "Setup the bot in this VC");
     }
 
 }

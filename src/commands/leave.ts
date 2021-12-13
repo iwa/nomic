@@ -6,7 +6,7 @@ import { getVoiceConnection } from '@discordjs/voice';
 export default new class LeaveCommand extends Command {
 
     public constructor() {
-        super('leave', LeaveVC, 0, [], ['EMBED_LINKS'], 'leave', "Leave the VC");
+        super('leave', LeaveVC, 1, [], ['EMBED_LINKS'], 'leave', "Leave the VC");
     }
 
 }
