@@ -1,6 +1,11 @@
 version: "3.9"
 services:
-  pingu:
+  nomic:
     build: .
+    container_name: nomic
     environment:
-      BOT_TOKEN: ${BOT_TOKEN}
+      TOKEN: ${TOKEN}
+      AWS_ID: ${AWS_ID}
+      AWS_KEY: ${AWS_KEY}
+      IWA: "125325519054045184"
+      CDN_URL: "cdn.iwa.sh"

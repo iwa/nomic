@@ -4,8 +4,9 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY package.json /app
-COPY yarn.lock /app/
-COPY index.js /app
+COPY yarn.lock /app
+COPY tsconfig.json /app
+COPY src /app/src
 
 RUN yarn
 RUN yarn build
