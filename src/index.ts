@@ -2,15 +2,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import Bot from './Client';
-import fs, { createReadStream } from 'fs';
 
 import Command from './structures/Command';
 import makePermsErrorBetter from "./utils/makePermsErrorBetter";
 import PermLevels from "./structures/PermLevels";
 import { TextChannel, VoiceChannel } from "discord.js";
-import { createAudioResource, getVoiceConnection, StreamType } from "@discordjs/voice";
+import { createAudioResource, getVoiceConnection } from "@discordjs/voice";
 import { Stream } from "stream";
-import { join } from "path";
 
 // Process related Events
 process.on('uncaughtException', async exception => Bot.log.error(exception));
@@ -29,8 +27,8 @@ Bot.once('shardReady', async () => {
 
 // Slash commands
 Bot.on('interactionCreate', async (interaction) => {
-
     if (!interaction.isCommand()) return;
+    if (interaction.user.bot) return;
 
     let cmd: Command = Bot.commands.get(interaction.commandName);
 
@@ -45,8 +43,6 @@ Bot.on('interactionCreate', async (interaction) => {
         else if (cmd.permLevel == PermLevels.Everyone)
             await cmd.run(interaction);
     }
-
-
 });
 
 // Message Event
