@@ -74,23 +74,28 @@ Bot.on('messageCreate', async (msg) => {
         return;
     }
     if (msg.channelId === Bot.currentVC && msg.cleanContent.length <= 1024) {
-        let res = await Bot.tts.synthesizeSpeech({
-            OutputFormat: 'mp3',
-            Text: `${msg.member.nickname} a dit : ${msg.cleanContent}`,
-            VoiceId: 'Mathieu',
-            Engine: 'standard',
-            LanguageCode: 'fr-FR',
-            SampleRate: '24000'
-        }).promise();
+        let player = Bot.players.get(msg.guildId);
 
-        if (res.AudioStream) {
-            if (res.AudioStream instanceof Buffer) {
-                let stream = Stream.Readable.from(res.AudioStream);
-                let player = Bot.players.get(msg.guildId);
-                let ressource = createAudioResource(stream, { inlineVolume: true });
-                ressource.volume.setVolume(0.8);
-                player.play(ressource);
+        if (player) {
+            let res = await Bot.tts.synthesizeSpeech({
+                OutputFormat: 'mp3',
+                Text: `${msg.member.nickname} a dit : ${msg.cleanContent}`,
+                VoiceId: 'Mathieu',
+                Engine: 'standard',
+                LanguageCode: 'fr-FR',
+                SampleRate: '24000'
+            }).promise();
+
+            if (res.AudioStream) {
+                if (res.AudioStream instanceof Buffer) {
+                    let stream = Stream.Readable.from(res.AudioStream);
+                    let ressource = createAudioResource(stream, { inlineVolume: true });
+                    ressource.volume.setVolume(0.8);
+                    player.play(ressource);
+                }
             }
+        } else {
+            msg.react('❌');
         }
     }
 });
