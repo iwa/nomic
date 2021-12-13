@@ -4,7 +4,8 @@
     "description": "",
     "main": "build/index.js",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "update": "git fetch origin main && git pull origin main && rm -rf build/ && yarn && yarn tsc"
     },
     "repository": {
         "type": "git",
