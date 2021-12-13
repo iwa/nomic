@@ -21,5 +21,5 @@ export default function createEmbed(title?: string, desc?: string, footer?: stri
     if (thumbnail)
         embed.setThumbnail(thumbnail);
 
-    return { embeds: [embed] };
+    return embed;
 }

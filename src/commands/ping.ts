@@ -12,7 +12,9 @@ export default new class PingCommand extends Command {
 
 async function SendPing(interaction: CommandInteraction) {
     let ping = Math.ceil(Bot.ws.ping);
-    await interaction.reply(Bot.createEmbed(null, `:ping_pong: Pong ! \`${ping}ms\``))
+    await interaction.reply({
+        embeds: [Bot.createEmbed(null, `:ping_pong: Pong ! \`${ping}ms\``)]
+    })
         .then(() => { Bot.log.info({ msg: 'ping', author: { id: interaction.user.id, name: interaction.user.tag }, guild: { id: interaction.guild.id, name: interaction.guild.name } }); })
         .catch(err => Bot.log.error(err));
 }

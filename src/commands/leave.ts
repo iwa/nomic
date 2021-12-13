@@ -15,16 +15,25 @@ async function LeaveVC(interaction: CommandInteraction) {
     let voiceConnection = getVoiceConnection(interaction.guildId);
 
     if (!voiceConnection) {
-        interaction.reply({ content: "I'm not connected anywhere!", ephemeral: true });
+        interaction.reply({
+            embeds: [Bot.createEmbed(null, ":x: I'm not connected anywhere!")],
+            ephemeral: true
+        });
         return;
     } else {
         try {
             Bot.players.get(interaction.guildId).stop();
             voiceConnection.destroy();
 
-            interaction.reply({ content: "Left the VC.", ephemeral: true });
+            interaction.reply({
+                embeds: [Bot.createEmbed(null, ":door: Left the VC.")],
+                ephemeral: true
+            });
         } catch (e) {
-            interaction.reply({ content: "Failed to leave the voice channel!", ephemeral: true });
+            interaction.reply({
+                embeds: [Bot.createEmbed(null, ":x: Failed to leave the voice channel!")],
+                ephemeral: true
+            });
         }
 
         Bot.log.info({ msg: 'leave', author: { id: interaction.user.id, name: interaction.user.tag }, guild: { id: interaction.guild.id, name: interaction.guild.name } });

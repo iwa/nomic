@@ -13,7 +13,9 @@ export default new class SetupCommand extends Command {
 async function SetupVC(interaction: CommandInteraction) {
     Bot.currentVC = interaction.channelId;
 
-    await interaction.reply(Bot.createEmbed(null, `:white_check_mark: TTS Setup in this channel!`))
+    await interaction.reply({
+        embeds: [Bot.createEmbed(null, `:white_check_mark: TTS Channel set to this channel!`)]
+    })
         .then(() => { Bot.log.info({ msg: 'setup', author: { id: interaction.user.id, name: interaction.user.tag }, guild: { id: interaction.guild.id, name: interaction.guild.name } }); })
         .catch(err => Bot.log.error(err));
 }

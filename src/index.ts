@@ -6,7 +6,7 @@ import Bot from './Client';
 import Command from './structures/Command';
 import makePermsErrorBetter from "./utils/makePermsErrorBetter";
 import PermLevels from "./structures/PermLevels";
-import { TextChannel, VoiceChannel } from "discord.js";
+import { GuildMember, TextChannel, VoiceChannel } from "discord.js";
 import { createAudioResource, getVoiceConnection } from "@discordjs/voice";
 import { Stream } from "stream";
 
@@ -38,10 +38,30 @@ Bot.on('interactionCreate', async (interaction) => {
             return;
         }
 
-        if (cmd.permLevel == PermLevels.Iwa && interaction.user.id == process.env.IWA)
-            await cmd.run(interaction);
-        else if (cmd.permLevel == PermLevels.Everyone)
-            await cmd.run(interaction);
+        switch (cmd.permLevel) {
+            case PermLevels.Iwa:
+                if (interaction.user.id === process.env.IWA)
+                    await cmd.run(interaction);
+                break;
+
+            case PermLevels.Mod:
+                if ((interaction.member as GuildMember).permissions.has('ADMINISTRATOR') ||
+                    (interaction.member as GuildMember).permissions.has('MANAGE_GUILD')) {
+                    await cmd.run(interaction);
+                } else
+                    interaction.reply({
+                        embeds: [Bot.createEmbed(":x: You need to have either `Admin` or `Manage Server` permission!")],
+                        ephemeral: true
+                    });
+                break;
+
+            case PermLevels.Everyone:
+                await cmd.run(interaction);
+                break;
+
+            default:
+                break;
+        }
     }
 });
 
