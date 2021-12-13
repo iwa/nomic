@@ -1,0 +1,32 @@
+import Bot from '../Client'
+import { CommandInteraction, GuildMember } from 'discord.js';
+import Command from '../structures/Command';
+import { getVoiceConnection } from '@discordjs/voice';
+
+export default new class LeaveCommand extends Command {
+
+    public constructor() {
+        super('leave', LeaveVC, 0, [], ['EMBED_LINKS'], 'leave', "Leave the VC");
+    }
+
+}
+
+async function LeaveVC(interaction: CommandInteraction) {
+    let voiceConnection = getVoiceConnection(interaction.guildId);
+
+    if (!voiceConnection) {
+        interaction.reply({ content: "I'm not connected anywhere!", ephemeral: true });
+        return;
+    } else {
+        try {
+            Bot.players.get(interaction.guildId).stop();
+            voiceConnection.destroy();
+
+            interaction.reply({ content: "Left the VC.", ephemeral: true });
+        } catch (e) {
+            interaction.reply({ content: "Failed to leave the voice channel!", ephemeral: true });
+        }
+
+        Bot.log.info({ msg: 'leave', author: { id: interaction.user.id, name: interaction.user.tag }, guild: { id: interaction.guild.id, name: interaction.guild.name } });
+    }
+}
