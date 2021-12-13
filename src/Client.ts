@@ -3,6 +3,8 @@ import log from './Logger';
 import fs from 'fs';
 import Command from "./structures/Command";
 import createEmbed from "./utils/createEmbed";
+import aws from 'aws-sdk'
+import { AudioPlayer } from "@discordjs/voice";
 
 export default new class Bot extends Client {
 
@@ -11,6 +13,18 @@ export default new class Bot extends Client {
     public log = log;
 
     public commands: Collection<string, Command> = new Collection();
+
+    public players: Map<string, AudioPlayer> = new Map();
+
+    public tts = new aws.Polly({
+        credentials: {
+            accessKeyId: process.env.AWS_ID,
+            secretAccessKey: process.env.AWS_KEY
+        },
+        region: 'eu-west-3'
+    });
+
+    public currentVC: string;
 
     public createEmbed = createEmbed;
 

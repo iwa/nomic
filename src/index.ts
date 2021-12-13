@@ -2,11 +2,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import Bot from './Client';
+import fs, { createReadStream } from 'fs';
 
 import Command from './structures/Command';
 import makePermsErrorBetter from "./utils/makePermsErrorBetter";
 import PermLevels from "./structures/PermLevels";
-import { TextChannel } from "discord.js";
+import { TextChannel, VoiceChannel } from "discord.js";
+import { createAudioResource, getVoiceConnection, StreamType } from "@discordjs/voice";
+import { Stream } from "stream";
+import { join } from "path";
 
 // Process related Events
 process.on('uncaughtException', async exception => Bot.log.error(exception));
@@ -53,63 +57,71 @@ Bot.on('messageCreate', async (msg) => {
         Bot.log.trace({ msg: 'dm', author: { id: msg.author.id, name: msg.author.tag }, content: msg.cleanContent, attachment: msg.attachments.first() });
         return;
     }
+    if (msg.channelId === Bot.currentVC && msg.cleanContent.length <= 1024) {
+        let res = await Bot.tts.synthesizeSpeech({
+            OutputFormat: 'mp3',
+            Text: `${msg.member.nickname} a dit : ${msg.cleanContent}`,
+            VoiceId: 'Mathieu',
+            Engine: 'standard',
+            LanguageCode: 'fr-FR',
+            SampleRate: '24000'
+        }).promise();
+
+        if (res.AudioStream) {
+            if (res.AudioStream instanceof Buffer) {
+                let stream = Stream.Readable.from(res.AudioStream);
+                let player = Bot.players.get(msg.guildId);
+                let ressource = createAudioResource(stream, { inlineVolume: true });
+                ressource.volume.setVolume(0.8);
+                player.play(ressource);
+            }
+        }
+    }
 });
 
 
 // VC Check if Bot's alone
-//Bot.on('voiceStateUpdate', async (oldState, newState) => {
-//    let channel = oldState.channel;
-//    if (!channel) return;
-//
-//    if (oldState.id === Bot.user.id && newState.id === Bot.user.id) {
-//        if (!newState.channel) {
-//            let player = Bot.music.players.get(oldState.guild.id);
-//
-//            if (player)
-//                player.destroy();
-//        }
-//    }
-//
-//    let members = channel.members;
-//    if (members.size === 1)
-//        if (members.has(Bot.user.id)) {
-//            let voiceChannel = oldState.channel;
-//            if (!voiceChannel) return;
-//
-//            const player = Bot.music.players.get(voiceChannel.guild.id);
-//
-//            if (player) {
-//                setTimeout(async () => {
-//                    let voiceChan = await Bot.channels.fetch(player.voiceChannel);
-//                    if (!voiceChan) return player.destroy();
-//
-//                    if ((voiceChan as VoiceChannel).members.size === 1) {
-//                        player.destroy();
-//                        Bot.log.info({ msg: 'auto stop', guild: { id: voiceChannel.guild.id, name: voiceChannel.guild.name } })
-//                    }
-//                }, 300000);
-//            }
-//        }
-//});
+Bot.on('voiceStateUpdate', async (oldState, newState) => {
+    let channel = oldState.channel;
+    if (!channel) return;
 
-// VC Region Update
-//Bot.on('channelUpdate', async (oldChannel: VoiceChannel, newChannel: VoiceChannel) => {
-//    if (oldChannel.type === 'GUILD_VOICE' && newChannel.type === 'GUILD_VOICE') {
-//        let player = Bot.music.players.get(newChannel.guild.id);
-//
-//        if (player) {
-//            if (player.voiceChannel === newChannel.id) {
-//                if (player.playing && !player.paused) {
-//                    player.pause(true);
-//                    setTimeout(() => {
-//                        player.pause(false);
-//                    }, 500);
-//                }
-//            }
-//        }
-//    }
-//});
+    if (oldState.id === Bot.user.id && newState.id === Bot.user.id) {
+        if (!newState.channel) {
+            let player = Bot.players.get(oldState.guild.id);
 
+            if (player)
+                player.stop();
+        }
+    }
+
+    let members = channel.members;
+    if (members.size === 1) {
+        if (members.has(Bot.user.id)) {
+            let voiceChannel = oldState.channel;
+            if (!voiceChannel) return;
+
+            const voiceConnection = getVoiceConnection(voiceChannel.id);
+            const player = Bot.players.get(voiceChannel.guild.id);
+
+            if (voiceConnection || player) {
+                setTimeout(async () => {
+                    let voiceChan = await Bot.channels.fetch(voiceChannel.id);
+                    if (!voiceChan) {
+                        player.stop();
+                        voiceConnection.destroy();
+                        return;
+                    }
+
+                    if ((voiceChan as VoiceChannel).members.size === 1) {
+                        player.stop();
+                        voiceConnection.destroy();
+                        Bot.log.info({ msg: 'auto stop', guild: { id: voiceChannel.guild.id, name: voiceChannel.guild.name } })
+                    }
+                }, 300000);
+            }
+        }
+    }
+});
 
 // Login
 Bot.start(process.env.TOKEN);
