@@ -1,5 +1,8 @@
 FROM node:16
 
+RUN apt install libtool-bin
+RUN yarn global add node-gyp
+
 RUN mkdir -p /app
 WORKDIR /app
 
