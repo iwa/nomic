@@ -11,7 +11,7 @@ COPY src /app/src
 RUN yarn
 RUN yarn build
 
-RUN useradd -u 8877 iwabot
-USER iwabot
+RUN useradd -u 8877 nomic
+USER nomic
 
 CMD ["node", "."]
