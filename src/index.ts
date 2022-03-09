@@ -79,7 +79,7 @@ Bot.on('messageCreate', async (msg) => {
         if (player && player.state.status !== 'playing') {
             let res = await Bot.tts.synthesizeSpeech({
                 OutputFormat: 'mp3',
-                Text: `${msg.member.nickname} a dit : ${msg.cleanContent}`,
+                Text: `${msg.member.nickname ? msg.member.nickname : msg.author.username} a dit : ${msg.cleanContent}`,
                 VoiceId: 'Mathieu',
                 Engine: 'standard',
                 LanguageCode: 'fr-FR',
