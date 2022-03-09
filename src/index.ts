@@ -73,7 +73,7 @@ Bot.on('messageCreate', async (msg) => {
         Bot.log.trace({ msg: 'dm', author: { id: msg.author.id, name: msg.author.tag }, content: msg.cleanContent, attachment: msg.attachments.first() });
         return;
     }
-    if (msg.channelId === Bot.currentVC && msg.cleanContent.length <= 1024) {
+    if (Bot.currentTC.has(msg.guildId) && msg.channelId === Bot.currentTC.get(msg.guildId) && msg.cleanContent.length <= 1024) {
         let player = Bot.players.get(msg.guildId);
 
         if (player && player.state.status !== 'playing') {
@@ -110,8 +110,10 @@ Bot.on('voiceStateUpdate', async (oldState, newState) => {
         if (!newState.channel) {
             let player = Bot.players.get(oldState.guild.id);
 
-            if (player)
+            if (player) {
                 player.stop();
+                Bot.currentTC.delete(oldState.guild.id);
+            }
         }
     }
 
@@ -130,12 +132,14 @@ Bot.on('voiceStateUpdate', async (oldState, newState) => {
                     if (!voiceChan) {
                         player.stop();
                         voiceConnection.destroy();
+                        Bot.currentTC.delete(oldState.guild.id);
                         return;
                     }
 
                     if ((voiceChan as VoiceChannel).members.size === 1) {
                         player.stop();
                         voiceConnection.destroy();
+                        Bot.currentTC.delete(oldState.guild.id);
                         Bot.log.info({ msg: 'auto stop', guild: { id: voiceChannel.guild.id, name: voiceChannel.guild.name } })
                     }
                 }, 300000);

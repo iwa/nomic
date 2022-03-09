@@ -38,9 +38,11 @@ async function JoinVC(interaction: CommandInteraction) {
 
                 connection.subscribe(player);
 
+                Bot.currentTC.set(interaction.guildId, interaction.channelId);
+
                 interaction.reply({
-                    embeds: [Bot.createEmbed(null, ":wave: Joined the voice channel!")],
-                    ephemeral: true
+                    embeds: [Bot.createEmbed(null, `:wave: Joined the voice channel and bound to \`${voiceChannel.name}\`!`)],
+                    ephemeral: false
                 });
             } catch (e) {
                 interaction.reply({

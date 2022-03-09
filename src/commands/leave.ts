@@ -24,6 +24,7 @@ async function LeaveVC(interaction: CommandInteraction) {
         try {
             Bot.players.get(interaction.guildId).stop();
             voiceConnection.destroy();
+            Bot.currentTC.delete(interaction.guildId);
 
             interaction.reply({
                 embeds: [Bot.createEmbed(null, ":door: Left the VC.")],
