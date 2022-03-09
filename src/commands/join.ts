@@ -45,6 +45,7 @@ async function JoinVC(interaction: CommandInteraction) {
                     ephemeral: false
                 });
             } catch (e) {
+                Bot.log.error(e)
                 interaction.reply({
                     embeds: [Bot.createEmbed(null, ":x: Failed to join the voice channel!")],
                     ephemeral: true

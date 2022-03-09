@@ -24,7 +24,7 @@ export default new class Bot extends Client {
         region: 'eu-west-3'
     });
 
-    public currentTC: Map<string, string>;
+    public currentTC: Map<string, string> = new Map();
 
     public createEmbed = createEmbed;
 
