@@ -76,7 +76,7 @@ Bot.on('messageCreate', async (msg) => {
     if (msg.channelId === Bot.currentVC && msg.cleanContent.length <= 1024) {
         let player = Bot.players.get(msg.guildId);
 
-        if (player) {
+        if (player && player.state.status !== 'playing') {
             let res = await Bot.tts.synthesizeSpeech({
                 OutputFormat: 'mp3',
                 Text: `${msg.member.nickname} a dit : ${msg.cleanContent}`,
