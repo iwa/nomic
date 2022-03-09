@@ -17,8 +17,8 @@ process.on('unhandledRejection', async exception => Bot.log.error(exception));
 // Bot-User related Events
 Bot.on('warn', (warn) => Bot.log.warn(warn));
 Bot.on('shardError', (error) => Bot.log.error(error));
-Bot.on('shardDisconnect', (event) => Bot.log.debug({ msg: "iwabot disconnected", event: event }));
-Bot.on('shardReconnecting', (event) => Bot.log.debug({ msg: "iwabot reconnecting", event: event }));
+Bot.on('shardDisconnect', (event) => Bot.log.debug({ msg: "bot disconnected", event: event }));
+Bot.on('shardReconnecting', (event) => Bot.log.debug({ msg: "bot reconnecting", event: event }));
 Bot.on('shardResume', () => { Bot.user.setStatus('idle'); });
 Bot.once('shardReady', async () => {
     Bot.user.setStatus('idle');
