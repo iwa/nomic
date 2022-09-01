@@ -33,7 +33,7 @@ Bot.on('interactionCreate', async (interaction) => {
     let cmd: Command = Bot.commands.get(interaction.commandName);
 
     if (cmd) {
-        if (cmd.discordPerm && !interaction.guild.me.permissions.has(cmd.discordPerm) && !(interaction.channel as TextChannel).permissionsFor(Bot.user).has(cmd.discordPerm)) {
+        if (cmd.discordPerm && !interaction.guild.members.me.permissions.has(cmd.discordPerm) && !(interaction.channel as TextChannel).permissionsFor(Bot.user).has(cmd.discordPerm)) {
             makePermsErrorBetter(interaction, cmd);
             return;
         }
@@ -45,8 +45,8 @@ Bot.on('interactionCreate', async (interaction) => {
                 break;
 
             case PermLevels.Mod:
-                if ((interaction.member as GuildMember).permissions.has('ADMINISTRATOR') ||
-                    (interaction.member as GuildMember).permissions.has('MANAGE_GUILD')) {
+                if ((interaction.member as GuildMember).permissions.has('Administrator') ||
+                    (interaction.member as GuildMember).permissions.has('ManageGuild')) {
                     await cmd.run(interaction);
                 } else
                     interaction.reply({
@@ -140,7 +140,7 @@ Bot.on('voiceStateUpdate', async (oldState, newState) => {
                         player.stop();
                         voiceConnection.destroy();
                         Bot.currentTC.delete(oldState.guild.id);
-                        Bot.log.info({ msg: 'auto stop', guild: { id: voiceChannel.guild.id, name: voiceChannel.guild.name } })
+                        Bot.log.info({ msg: 'auto stop', guild: { id: voiceChannel.guild.id, name: voiceChannel.guild.name } });
                     }
                 }, 300000);
             }

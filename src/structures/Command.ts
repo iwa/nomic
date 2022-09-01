@@ -1,4 +1,4 @@
-import { PermissionString } from "discord.js";
+import { PermissionsString } from "discord.js";
 import PermLevels from "./PermLevels";
 
 export default class Command {
@@ -8,10 +8,10 @@ export default class Command {
 
     public readonly permLevel: PermLevels;
     public readonly aliases: readonly string[];
-    public readonly discordPerm: PermissionString[];
+    public readonly discordPerm: PermissionsString[];
     public readonly usage: string;
 
-    constructor(name: string, run: Function, permLevel: PermLevels, aliases: string[], discordPerm: PermissionString[], usage: string, desc?: string) {
+    constructor(name: string, run: Function, permLevel: PermLevels, aliases: string[], discordPerm: PermissionsString[], usage: string, desc?: string) {
         this.name = name;
         this.run = run;
         this.permLevel = permLevel;

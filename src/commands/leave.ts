@@ -1,4 +1,4 @@
-import Bot from '../Client'
+import Bot from '../Client';
 import { CommandInteraction, GuildMember } from 'discord.js';
 import Command from '../structures/Command';
 import { getVoiceConnection } from '@discordjs/voice';
@@ -6,10 +6,10 @@ import { getVoiceConnection } from '@discordjs/voice';
 export default new class LeaveCommand extends Command {
 
     public constructor() {
-        super('leave', LeaveVC, 1, [], ['EMBED_LINKS'], 'leave', "Leave the VC");
+        super('leave', LeaveVC, 1, [], ['EmbedLinks'], 'leave', "Leave the VC");
     }
 
-}
+};
 
 async function LeaveVC(interaction: CommandInteraction) {
     let voiceConnection = getVoiceConnection(interaction.guildId);

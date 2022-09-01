@@ -1,5 +1,5 @@
 import Bot from '../Client';
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 import Command from "../structures/Command";
 
 const flags = new Map([
@@ -48,7 +48,7 @@ export default async function makePermsErrorBetter(interaction: CommandInteracti
     return iwa.send({
         'embeds': [{
             'title': '❌ Perms missing',
-            'description': `**Server:** \`${interaction.guild.name}\`\n**Channel:** \`${interaction.channel.isText() ? (interaction.channel as any).name : 'dm'}\`\n${cleanPerms.join(', ')}`
+            'description': `**Server:** \`${interaction.guild.name}\`\n**Channel:** \`${interaction.channel.isTextBased() ? (interaction.channel as any).name : 'dm'}\`\n${cleanPerms.join(', ')}`
         }]
     });
 }

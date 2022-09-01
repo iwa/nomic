@@ -1,14 +1,14 @@
-import Bot from '../Client'
+import Bot from '../Client';
 import { CommandInteraction } from 'discord.js';
 import Command from '../structures/Command';
 
 export default new class PingCommand extends Command {
 
     public constructor() {
-        super('ping', SendPing, 0, [], ['EMBED_LINKS'], 'ping', "Pong!");
+        super('ping', SendPing, 0, [], ['EmbedLinks'], 'ping', "Pong!");
     }
 
-}
+};
 
 async function SendPing(interaction: CommandInteraction) {
     let ping = Math.ceil(Bot.ws.ping);

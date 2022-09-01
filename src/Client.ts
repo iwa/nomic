@@ -1,9 +1,9 @@
-import { Collection, Client, Intents } from "discord.js";
+import { Collection, Client, GatewayIntentBits } from "discord.js";
 import log from './Logger';
 import fs from 'fs';
 import Command from "./structures/Command";
 import createEmbed from "./utils/createEmbed";
-import aws from 'aws-sdk'
+import aws from 'aws-sdk';
 import { AudioPlayer } from "@discordjs/voice";
 
 export default new class Bot extends Client {
@@ -30,9 +30,8 @@ export default new class Bot extends Client {
 
     public constructor() {
         super({
-            retryLimit: 5,
-            intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,
-            Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
+            intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages,
+            GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessageReactions]
         });
     }
 
@@ -52,8 +51,8 @@ export default new class Bot extends Client {
                             if (!fi.endsWith(".js")) return;
                             let commande: Command = (await import(`./commands/${f.name}/${fi}`)).default;
                             this.commands.set(commande.name, commande);
-                        })
-                    })
+                        });
+                    });
                 } else {
                     if (!f.name.endsWith(".js")) return;
                     let commande: Command = (await import(`./commands/${f.name}`)).default;
@@ -85,4 +84,4 @@ export default new class Bot extends Client {
         }
         this.log.debug('commmands created');
     }
-}
+};

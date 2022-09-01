@@ -1,15 +1,15 @@
-import Bot from '../Client'
-import { CommandInteraction, GuildMember } from 'discord.js';
+import Bot from '../Client';
+import { ChannelType, CommandInteraction, GuildMember } from 'discord.js';
 import Command from '../structures/Command';
 import { createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
 
 export default new class JoinCommand extends Command {
 
     public constructor() {
-        super('join', JoinVC, 0, [], ['EMBED_LINKS'], 'join', "Join the VC you're in");
+        super('join', JoinVC, 0, [], ['EmbedLinks'], 'join', "Join the VC you're in");
     }
 
-}
+};
 
 async function JoinVC(interaction: CommandInteraction) {
     let voiceChannel = (interaction.member as GuildMember).voice.channel;
@@ -20,7 +20,7 @@ async function JoinVC(interaction: CommandInteraction) {
         });
         return;
     } else {
-        if (voiceChannel.type === "GUILD_VOICE") {
+        if (voiceChannel.type === ChannelType.GuildVoice) {
             try {
                 const connection = joinVoiceChannel({
                     channelId: voiceChannel.id,
@@ -45,7 +45,7 @@ async function JoinVC(interaction: CommandInteraction) {
                     ephemeral: false
                 });
             } catch (e) {
-                Bot.log.error(e)
+                Bot.log.error(e);
                 interaction.reply({
                     embeds: [Bot.createEmbed(null, ":x: Failed to join the voice channel!")],
                     ephemeral: true
