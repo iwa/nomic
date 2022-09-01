@@ -31,7 +31,7 @@ export default new class Bot extends Client {
     public constructor() {
         super({
             intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages,
-            GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessageReactions]
+            GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.MessageContent]
         });
     }
 
